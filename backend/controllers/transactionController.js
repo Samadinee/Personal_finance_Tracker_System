@@ -1,4 +1,3 @@
-// controllers/transactionController.js
 const Transaction = require('../models/transaction');
 const Budget = require('../models/budget');
 
@@ -32,7 +31,8 @@ const checkBudgetExceed = async (userId, category, amount) => {
     }
 
     // If the total spent exceeds the limit
-    if (totalSpent[0]?.total + amount > budget.limit) {
+    const spentAmount = totalSpent[0]?.total || 0;
+    if (spentAmount + amount > budget.limit) {
       console.log(`Budget exceeded for category: ${category}. You have exceeded your limit of ${budget.limit}.`);
       // Trigger notification logic here (e.g., sending an email or push notification)
     }
@@ -108,32 +108,27 @@ exports.updateTransaction = async (req, res) => {
 // Delete a transaction by ID
 exports.deleteTransaction = async (req, res) => {
   const { id } = req.params;
-  exports.deleteTransaction = async (req, res) => {
-    const { id } = req.params;
-    
-    console.log("Attempting to delete transaction with ID:", id);  // Log the ID being passed
-    
-    try {
-      const transaction = await Transaction.findById(id);
-      if (!transaction) {
-        console.log("Transaction not found");
-        return res.status(404).json({ error: 'Transaction not found' });
-      }
+
+  console.log("Attempting to delete transaction with ID:", id);  // Log the ID being passed
   
-      // Ensure the user can only delete their own transaction
-      if (transaction.userId.toString() !== req.user._id.toString()) {
-        console.log("Unauthorized delete attempt by user:", req.user._id);
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-  
-      await transaction.deleteOne();
-      console.log("Transaction deleted successfully");
-      res.status(200).json({ message: 'Transaction deleted' });
-    } catch (error) {
-      console.log("Error occurred while deleting transaction:", error);
-      res.status(500).json({ error: 'Error deleting transaction' });
+  try {
+    const transaction = await Transaction.findById(id);
+    if (!transaction) {
+      console.log("Transaction not found");
+      return res.status(404).json({ error: 'Transaction not found' });
     }
+
+    // Ensure the user can only delete their own transaction
+    if (transaction.userId.toString() !== req.user._id.toString()) {
+      console.log("Unauthorized delete attempt by user:", req.user._id);
+      return res.status(403).json({ error: 'Forbidden: You cannot delete someone else\'s transaction' });
+    }
+
+    await transaction.deleteOne();
+    console.log("Transaction deleted successfully");
+    res.status(200).json({ message: 'Transaction deleted' });
+  } catch (error) {
+    console.log("Error occurred while deleting transaction:", error);
+    res.status(500).json({ error: 'Error deleting transaction' });
   }
 };
-  
-

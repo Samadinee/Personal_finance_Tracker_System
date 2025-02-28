@@ -10,4 +10,3 @@ router.put('/:id', protect, updateTransaction);
 router.delete('/:id', protect, deleteTransaction);
 
 module.exports = router;
-

@@ -64,17 +64,26 @@ exports.updateBudget = async (req, res) => {
 exports.deleteBudget = async (req, res) => {
   const { id } = req.params;
 
+  console.log("Attempting to delete budget with ID:", id);  // Log the ID being passed
+
   try {
     const budget = await Budget.findById(id);
-    if (!budget) return res.status(404).json({ error: 'Budget not found' });
+    if (!budget) {
+      console.log("Budget not found");
+      return res.status(404).json({ error: 'Budget not found' });
+    }
 
+    // Ensure the user can only delete their own budget
     if (budget.userId.toString() !== req.user._id.toString()) {
+      console.log("Unauthorized delete attempt by user:", req.user._id);
       return res.status(403).json({ error: 'Forbidden' });
     }
 
-    await budget.remove();
-    res.status(200).json({ message: 'Budget deleted successfully' });
+    await budget.deleteOne();
+    console.log("Budget deleted successfully");
+    res.status(200).json({ message: 'Budget deleted' });
   } catch (error) {
+    console.log("Error occurred while deleting budget:", error);
     res.status(500).json({ error: 'Error deleting budget' });
   }
 };
