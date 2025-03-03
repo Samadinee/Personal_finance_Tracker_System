@@ -3,46 +3,56 @@ const Budget = require('../models/budget');
 
 // Check if the budget for the category is exceeded
 const checkBudgetExceed = async (userId, category, amount) => {
-  const budget = await Budget.findOne({ userId, category });
+  try {
+    const budget = await Budget.findOne({ userId, category });
 
-  if (budget) {
-    let totalSpent = 0;
+    if (budget) {
+      let totalSpent = 0;
 
-    // Daily budget check
-    if (budget.type === 'daily') {
-      const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));  // Start of the day
-      const endOfDay = new Date(new Date().setHours(23, 59, 59, 999)); // End of the day
+      // Daily budget check
+      if (budget.type === 'daily') {
+        const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));  // Start of the day
+        const endOfDay = new Date(new Date().setHours(23, 59, 59, 999)); // End of the day
 
-      totalSpent = await Transaction.aggregate([
-        { $match: { userId, category, date: { $gte: startOfDay, $lte: endOfDay } } },
-        { $group: { _id: null, total: { $sum: '$amount' } } }
-      ]);
+        totalSpent = await Transaction.aggregate([
+          { $match: { userId, category, date: { $gte: startOfDay, $lte: endOfDay } } },
+          { $group: { _id: null, total: { $sum: '$amount' } } }
+        ]);
+      }
+
+      // Monthly budget check
+      if (budget.type === 'monthly') {
+        const startOfMonth = new Date(budget.startDate);
+        const endOfMonth = new Date(budget.endDate);
+
+        totalSpent = await Transaction.aggregate([
+          { $match: { userId, category, date: { $gte: startOfMonth, $lte: endOfMonth } } },
+          { $group: { _id: null, total: { $sum: '$amount' } } }
+        ]);
+      }
+
+      // If the total spent exceeds the limit
+      const spentAmount = totalSpent[0]?.total || 0;
+      if (spentAmount + amount > budget.limit) {
+        console.log(`Budget exceeded for category: ${category}. You have exceeded your limit of ${budget.limit}.`);
+        // Trigger notification logic here (e.g., sending an email or push notification)
+      }
     }
-
-    // Monthly budget check
-    if (budget.type === 'monthly') {
-      const startOfMonth = new Date(budget.startDate);
-      const endOfMonth = new Date(budget.endDate);
-
-      totalSpent = await Transaction.aggregate([
-        { $match: { userId, category, date: { $gte: startOfMonth, $lte: endOfMonth } } },
-        { $group: { _id: null, total: { $sum: '$amount' } } }
-      ]);
-    }
-
-    // If the total spent exceeds the limit
-    const spentAmount = totalSpent[0]?.total || 0;
-    if (spentAmount + amount > budget.limit) {
-      console.log(`Budget exceeded for category: ${category}. You have exceeded your limit of ${budget.limit}.`);
-      // Trigger notification logic here (e.g., sending an email or push notification)
-    }
+  } catch (error) {
+    console.error('Error checking budget:', error);
   }
 };
 
 // Create a new transaction
 exports.createTransaction = async (req, res) => {
   const { type, amount, category, tags } = req.body;
+
+  if (!req.user || !req.user._id) {
+    return res.status(400).json({ error: 'User not authenticated' });
+  }
+
   try {
+    // Create the new transaction
     const transaction = new Transaction({
       userId: req.user._id,  // Automatically associates with logged-in user
       type,
@@ -58,6 +68,7 @@ exports.createTransaction = async (req, res) => {
 
     res.status(201).json(transaction);
   } catch (error) {
+    console.error('Error creating transaction:', error);  // Log the error for debugging
     res.status(500).json({ error: 'Error creating transaction' });
   }
 };
@@ -76,6 +87,7 @@ exports.getTransactions = async (req, res) => {
     const transactions = await Transaction.find(filter).sort({ date: -1 });
     res.status(200).json(transactions);
   } catch (error) {
+    console.error('Error fetching transactions:', error);
     res.status(500).json({ error: 'Error fetching transactions' });
   }
 };
@@ -101,6 +113,7 @@ exports.updateTransaction = async (req, res) => {
 
     res.status(200).json(transaction);
   } catch (error) {
+    console.error('Error updating transaction:', error);
     res.status(500).json({ error: 'Error updating transaction' });
   }
 };

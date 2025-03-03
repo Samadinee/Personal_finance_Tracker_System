@@ -1,9 +1,9 @@
-// routes/transactionRoutes.js
 const express = require('express');
 const router = express.Router();
 const { createTransaction, getTransactions, updateTransaction, deleteTransaction } = require('../controllers/transactionController');
 const { protect } = require('../middleware/authMiddleware');
 
+// Protect routes with authentication middleware
 router.post('/', protect, createTransaction);
 router.get('/', protect, getTransactions);
 router.put('/:id', protect, updateTransaction);
