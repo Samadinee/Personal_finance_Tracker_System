@@ -8,6 +8,7 @@ const budgetRoutes = require('./routes/budgetRoutes');
 const recurrenceTransactionRoutes = require('./routes/recurrenceTransactionRoutes');
 const reportRoutes = require("./routes/reportRoutes");
 const goalRoutes = require('./routes/goalRoutes');
+const summaryRoutes = require('./routes/summaryRoutes'); 
 
 
 dotenv.config();
@@ -24,7 +25,8 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/recurrenceTransactions', recurrenceTransactionRoutes);
 app.use("/api/reports", reportRoutes);
-app.use('/api/goals', goalRoutes); 
+app.use('/api/goals', goalRoutes);
+app.use('/api/summary', summaryRoutes);   
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
