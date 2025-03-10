@@ -16,9 +16,26 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+/*
+//comment the following until stop comment when running
+// **Change**: Added check to ensure MongoDB connection is only made in non-test environments
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGODB_URL)
+    .then(() => console.log('MongoDB Connected'))
+    .catch((err) => console.log('DB Connection Error:', err));
+}
+//end
+*/
+
+
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log('DB Connection Error:', err));
+
+
+
+
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/transactions', transactionRoutes);
@@ -29,4 +46,21 @@ app.use('/api/goals', goalRoutes);
 app.use('/api/summary', summaryRoutes);   
 
 const PORT = process.env.PORT || 5000;
+
+
+
+
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+
+/*
+
+if (process.env.NODE_ENV !== 'test') { //To ensure this doesn't start the server during testing
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
+*/

@@ -52,7 +52,8 @@ describe('adminSummary', () => {
       }
     });
 
-    const req = {};
+    // Manually mock req and res
+    const req = {}; // No specific properties needed for the test
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -90,6 +91,7 @@ describe('adminSummary', () => {
     // Simulate an error in the function
     User.find.mockRejectedValue(new Error('Database error'));
 
+    // Manually mock req and res
     const req = {};
     const res = {
       status: jest.fn().mockReturnThis(),
