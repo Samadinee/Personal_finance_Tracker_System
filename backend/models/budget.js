@@ -2,10 +2,10 @@
 const mongoose = require('mongoose');
 
 const budgetSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, //user id to track user
   category: { type: String, required: true },
   limit: { type: Number, required: true },  // Budget limit for the category
-  type: { type: String, enum: ['daily', 'monthly'], required: true },  // Budget type: daily or monthly
+  type: { type: String, enum: ['daily', 'monthly'], required: true },  
   startDate: { type: Date, default: Date.now },  // Used for monthly budgets: start date of the budget
   endDate: { type: Date, default: Date.now },  // Used for monthly budgets: end date of the budget
 });

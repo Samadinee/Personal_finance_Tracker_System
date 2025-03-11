@@ -2,7 +2,7 @@ const Transaction = require('../models/transaction');
 
 exports.getFinancialReport = async (req, res) => {
     try {
-        // Ensure authentication middleware is correctly setting userId
+        // Ensure authentication middleware is correctly setting with the user id
         const userId = req.user?._id;
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized access" });
@@ -11,7 +11,7 @@ exports.getFinancialReport = async (req, res) => {
         // Extract filters from query params
         const { startDate, endDate, category, tags } = req.query;
 
-        // 🛠️ Build Query Filters
+        // Build Query Filters
         const filter = { userId };
 
         if (startDate && endDate) {
@@ -23,13 +23,12 @@ exports.getFinancialReport = async (req, res) => {
         if (category) filter.category = category;
         if (tags) filter.tags = { $in: tags.split(",") };
 
-        console.log("📌 Applied Filter:", filter); // Debugging
+        console.log("📌 Applied Filter:", filter); 
 
-        // 🔍 Fetch Transactions
+        // Fetch Transactions
         const transactions = await Transaction.find(filter);
-        console.log("📌 Transactions Found:", transactions.length); // Debugging
-
-        // 📊 Calculate Financial Summary
+        console.log("📌 Transactions Found:", transactions.length); 
+        // Calculate Financial Summary
         let totalIncome = 0;
         let totalExpense = 0;
         const categoryBreakdown = {};
@@ -43,10 +42,10 @@ exports.getFinancialReport = async (req, res) => {
             }
         });
 
-        // 🏦 Balance Calculation
+        // Calculation of the balance
         const balance = totalIncome - totalExpense;
 
-        // 📡 Send Response
+        // Send Response
         res.json({
             totalIncome,
             totalExpense,

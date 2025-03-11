@@ -7,10 +7,10 @@ const Budget = require('../models/budget');
 // Replace this with a real exchange rate API
 const EXCHANGE_API_URL = 'https://api.exchangerate-api.com/v4/latest/';
 
-// Convert any currency to LKR
+// Convert any type of a currency to LKR
 const convertToLKR = async (amount, currency) => {
   try {
-    if (currency === 'LKR') return amount; // No conversion needed
+    if (currency === 'LKR') return amount; // No conversion needed if currency is sri lankan rupees
 
     const response = await axios.get(`${EXCHANGE_API_URL}${currency}`);
     const exchangeRate = response.data.rates.LKR;
@@ -24,7 +24,7 @@ const convertToLKR = async (amount, currency) => {
   }
 };
 
-// Check if the budget for the category is exceeded
+// Check if the budget amount for the category is exceeded
 const checkBudgetExceed = async (userId, category, amount) => {
   try {
     const budget = await Budget.findOne({ userId, category });
@@ -32,7 +32,7 @@ const checkBudgetExceed = async (userId, category, amount) => {
     if (budget) {
       let totalSpent = 0;
 
-      // Daily budget check
+      // check daily budget
       if (budget.type === 'daily') {
         const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
         const endOfDay = new Date(new Date().setHours(23, 59, 59, 999));
@@ -43,7 +43,7 @@ const checkBudgetExceed = async (userId, category, amount) => {
         ]);
       }
 
-      // Monthly budget check
+      // check monthly budget
       if (budget.type === 'monthly') {
         const startOfMonth = new Date(budget.startDate);
         const endOfMonth = new Date(budget.endDate);
@@ -56,7 +56,7 @@ const checkBudgetExceed = async (userId, category, amount) => {
 
       const spentAmount = totalSpent[0]?.total || 0;
       if (spentAmount + amount > budget.limit) {
-        console.log(`Budget exceeded for category: ${category}. You have exceeded your limit of ${budget.limit}.`);
+        console.log(`Budget exceeded for category: ${category}. You have exceeded your limit of ${budget.limit}.`); //display massege in console
         // Trigger notification logic here (e.g., sending an email or push notification)
       }
     }
@@ -65,7 +65,7 @@ const checkBudgetExceed = async (userId, category, amount) => {
   }
 };
 
-// Create a new transaction (With Budget and Goal Tracking)
+// Create new transaction With checking Budget and Goal Tracking
 exports.createTransaction = async (req, res) => {
   const { type, amount, category, tags, currency } = req.body;
 
@@ -74,10 +74,10 @@ exports.createTransaction = async (req, res) => {
   }
 
   try {
-    // Convert the amount to LKR
+    // Convert the entered amount to LKR
     const convertedAmount = await convertToLKR(amount, currency);
 
-    // Calculate the user's balance (Income - Expenses)
+    // Calculate the user balance = (Income - Expenses)
     const totalIncome = await Transaction.aggregate([
       { $match: { userId: req.user._id, type: 'income' } },
       { $group: { _id: null, totalIncome: { $sum: '$amount' } } }
@@ -117,7 +117,7 @@ exports.createTransaction = async (req, res) => {
     // Check if the transaction exceeds the budget
     await checkBudgetExceed(req.user._id, category, convertedAmount);
 
-    // If the transaction is income and belongs to a goal category, update savedAmount
+    // If the transaction is income and belongs to a goal category, update savedAmount in relavant goal
     if (type === 'income') {
       const goal = await Goal.findOne({ userId: req.user._id, category });
       if (goal) {
@@ -131,12 +131,12 @@ exports.createTransaction = async (req, res) => {
       const goals = await Goal.find({ userId: req.user._id });
       const totalSaved = goals.reduce((sum, g) => sum + g.savedAmount, 0);
       
-      // Assume user has a totalBalance (you may need to track this in the User model)
+      // Assume user has a totalBalance 
       const remainingAmount = req.user.totalBalance - totalSaved;
 
       if (convertedAmount > remainingAmount) {
         console.log('Warning: Expense exceeds available funds after goal savings.');
-        // Trigger notification logic here (e.g., email, push notification)
+        // Trigger notification logic (e.g., email, push notification)
       }
     }
 
@@ -152,7 +152,7 @@ exports.createTransaction = async (req, res) => {
 };
 
 
-// Get all transactions (with optional filters)
+// Get all transactions details
 exports.getTransactions = async (req, res) => {
   const { type, category, tags } = req.query;
 

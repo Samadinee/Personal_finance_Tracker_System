@@ -7,7 +7,7 @@ exports.userSummary = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Fetch user's transactions (income and expenses)
+    // Fetch user transactions (income and expenses)
     const transactions = await Transaction.find({ userId });
     const incomes = transactions.filter(t => t.type === 'income');
     const expenses = transactions.filter(t => t.type === 'expense');
@@ -17,11 +17,11 @@ exports.userSummary = async (req, res) => {
     const totalExpense = expenses.reduce((acc, t) => acc + t.amount, 0);
     const balance = totalIncome - totalExpense;
 
-    // Fetch user's budget (if any) to calculate the exceed
+    // Get user budget (if any) to calculate the exceed
     const user = await User.findById(userId);
     const budgetExceed = user.budget ? (totalExpense - user.budget) : 0;
 
-    // Fetch user's goals and calculate the remaining amount to complete the goal
+    // Get user goals and calculate the remaining amount to complete the goal
     const goals = await Goal.find({ userId });
     const goalsInfo = goals.map(goal => {
       const remainingAmount = goal.targetAmount - goal.savedAmount;

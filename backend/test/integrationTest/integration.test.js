@@ -1,6 +1,6 @@
-const request = require('supertest');
-const mongoose = require('mongoose');
-const app = require('../../server'); // Import app from server.js
+const request = require('supertest');  //use supertest
+const mongoose = require('mongoose'); //Import mongoose
+const app = require('../../server'); // Import server.js
 const User = require('../../models/user');
 const Transaction = require('../../models/transaction');
 const Budget = require('../../models/budget');
@@ -15,7 +15,7 @@ let testBudgetId;
 let testGoalId;
 let testRecurrenceTransactionId;
 
-// Setup before all tests run
+// before run all the test setup user
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -31,7 +31,7 @@ beforeAll(async () => {
   authToken = jwt.sign({ userId: testUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 });
 
-// Cleanup after all tests run
+// Cleanup mongodb database after all tests run
 afterAll(async () => {
   await User.deleteMany();
   await Transaction.deleteMany();
@@ -42,7 +42,7 @@ afterAll(async () => {
 });
 
 describe('Integration Tests', () => {
-  // Test user login functionality
+  // Test user login function
   test('User login', async () => {
     const res = await request(app).post('/api/users/login').send({
       email: 'test@example.com',
@@ -52,7 +52,7 @@ describe('Integration Tests', () => {
     expect(res.body).toHaveProperty('token');
   });
 
-  // Test creating a transaction
+  // Test create a transaction
   test('Create a transaction', async () => {
     const res = await request(app)
       .post('/api/transactions')
@@ -62,7 +62,7 @@ describe('Integration Tests', () => {
     testTransactionId = res.body.transaction._id;
   });
 
-  // Test creating a budget
+  // Test create a budget
   test('Create a budget', async () => {
     const res = await request(app)
       .post('/api/budgets')
@@ -72,7 +72,7 @@ describe('Integration Tests', () => {
     testBudgetId = res.body.budget._id;
   });
 
-  // Test creating a financial goal
+  // Test create a financial goal
   test('Create a goal', async () => {
     const res = await request(app)
       .post('/api/goals')
@@ -82,15 +82,15 @@ describe('Integration Tests', () => {
     testGoalId = res.body._id;
   });
 
-  // Test creating a recurring transaction
+  // Test create a recurring transaction
   test('Create a recurring transaction', async () => {
     const requestData = {
-      type: 'Income', // Fix: Change to match enum in schema
+      type: 'Income', 
       amount: 200,
       category: 'Salary',
       recurrence: 'Monthly',
       startDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Ensure valid endDate
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), 
       tags: [],
     };
   

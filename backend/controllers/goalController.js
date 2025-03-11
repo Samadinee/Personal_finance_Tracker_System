@@ -2,7 +2,7 @@ const Goal = require('../models/goal');
 
 // Create a new goal
 exports.createGoal = async (req, res) => {
-    const { name, category, targetAmount } = req.body; // Ensure you're extracting `name`
+    const { name, category, targetAmount } = req.body; // Ensure extract `name`
     
     if (!name || !category || !targetAmount) {
       return res.status(400).json({ error: "Please provide all required fields: name, category, targetAmount" });
@@ -37,7 +37,7 @@ exports.getGoals = async (req, res) => {
   }
 };
 
-// Update a goal
+// Update existing goal by goal id
 exports.updateGoal = async (req, res) => {
   const { id } = req.params;
   const { name, targetAmount, category } = req.body;
@@ -62,7 +62,7 @@ exports.updateGoal = async (req, res) => {
   }
 };
 
-// Delete a goal
+// Delete goal by goal id
 exports.deleteGoal = async (req, res) => {
   const { id } = req.params;
 

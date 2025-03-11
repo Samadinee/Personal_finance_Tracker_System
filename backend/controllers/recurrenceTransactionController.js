@@ -2,13 +2,13 @@
 const RecurrenceTransaction = require('../models/recurrenceTransaction');
 const moment = require('moment');
 
-// Create a new recurrence transaction
+// Create new recurrence transaction
 exports.createRecurrenceTransaction = async (req, res) => {
   const { type, amount, category, tags, recurrence, startDate, endDate } = req.body;
 
   try {
     const recurrenceTransaction = new RecurrenceTransaction({
-      user: req.user._id,  // Automatically associates with logged-in user
+      user: req.user._id,  // Automatically connects with logged user
       type,
       amount,
       category,
@@ -25,17 +25,17 @@ exports.createRecurrenceTransaction = async (req, res) => {
   }
 };
 
-// Get all recurrence transactions for the user
+// Get all recurrence transactions of the relavant user
 exports.getRecurrenceTransactions = async (req, res) => {
   try {
-    const recurrenceTransactions = await RecurrenceTransaction.find({ user: req.user._id });
+    const recurrenceTransactions = await RecurrenceTransaction.find({ user: req.user._id }); //get user id
     res.status(200).json(recurrenceTransactions);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching recurrence transactions' });
   }
 };
 
-// Update a recurrence transaction
+// Update recurrence transaction of the relavant user
 exports.updateRecurrenceTransaction = async (req, res) => {
   const { id } = req.params;
   const { type, amount, category, tags, recurrence, startDate, endDate } = req.body;
@@ -63,7 +63,7 @@ exports.updateRecurrenceTransaction = async (req, res) => {
   }
 };
 
-// Delete a recurrence transaction
+// Delete a existing recurrence transaction
 exports.deleteRecurrenceTransaction = async (req, res) => {
   const { id } = req.params;
 
@@ -82,7 +82,7 @@ exports.deleteRecurrenceTransaction = async (req, res) => {
   }
 };
 
-// Check for upcoming recurrence transactions (within 2 days)
+// Check for upcoming recurrence transactions (this displays recurrance transactions within 2 days)
 exports.checkUpcomingRecurrenceTransactions = async (req, res) => {
   try {
     const upcomingTransactions = await RecurrenceTransaction.find({

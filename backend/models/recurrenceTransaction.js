@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const RecurrenceTransactionSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, //user id to track user
   type: { type: String, enum: ['Income', 'Expense'], required: true },
   amount: { type: Number, required: true },
   category: { type: String, required: true }, // e.g., Food, Transportation
@@ -14,7 +14,7 @@ const RecurrenceTransactionSchema = new mongoose.Schema({
   },
   startDate: { type: Date, required: true }, // Start date of the recurring transaction
   endDate: { type: Date }, // Optional end date for recurring transactions
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now } //get goal setted date
 });
 
 module.exports = mongoose.model('RecurrenceTransaction', RecurrenceTransactionSchema);

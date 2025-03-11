@@ -1,13 +1,13 @@
 // controllers/budgetController.js
 const Budget = require('../models/budget');
 
-// Create a new budget
+// Create new budget
 exports.createBudget = async (req, res) => {
   const { category, limit, type, startDate, endDate } = req.body;
 
   try {
     const existingBudget = await Budget.findOne({ userId: req.user._id, category });
-    if (existingBudget) return res.status(400).json({ error: 'Budget already set for this category' });
+    if (existingBudget) return res.status(400).json({ error: 'Budget already set for this category' }); //check whether budget is already exists
 
     const budget = new Budget({
       userId: req.user._id,
@@ -25,7 +25,7 @@ exports.createBudget = async (req, res) => {
   }
 };
 
-// Get all budgets for the user
+// Get all budgets of the user
 exports.getBudgets = async (req, res) => {
   try {
     const budgets = await Budget.find({ userId: req.user._id });
@@ -35,13 +35,13 @@ exports.getBudgets = async (req, res) => {
   }
 };
 
-// Update a budget by ID
+// Update a budget by budget ID
 exports.updateBudget = async (req, res) => {
   const { id } = req.params;
   const { limit, type, startDate, endDate } = req.body;
 
   try {
-    const budget = await Budget.findById(id);
+    const budget = await Budget.findById(id); //check whether budget is exists
     if (!budget) return res.status(404).json({ error: 'Budget not found' });
 
     if (budget.userId.toString() !== req.user._id.toString()) {
@@ -60,11 +60,11 @@ exports.updateBudget = async (req, res) => {
   }
 };
 
-// Delete a budget by ID
+// Delete a budget by budget ID
 exports.deleteBudget = async (req, res) => {
   const { id } = req.params;
 
-  console.log("Attempting to delete budget with ID:", id);  // Log the ID being passed
+  console.log("Attempting to delete budget with ID:", id);  // in console log the ID being passed
 
   try {
     const budget = await Budget.findById(id);
