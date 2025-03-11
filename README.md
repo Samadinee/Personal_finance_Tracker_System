@@ -49,6 +49,30 @@ The Finance Tracking Application is designed to help users manage their finances
   - `npm test test/securityTest/securityTest.test.js`
 
 
+## API Endpoints
+  ## User
+  - **Method**: POST
+    - `/api/users/register`
+    - `/api/users/login`
+    - `/api/budgets/`
+    - `/api/transactions`
+  - **Method**: GET
+    - `/api/summary/user-summary`
+    - `/api/budgets/`
+    - `/api/transactions?type=income&category=Food`
+    - `/api/reports`
+  - **Method**: PUT
+    - `/api/budgets/{budgetId}`
+    - `/api/transactions/{transactionId}`
+  - **Method**: DELETE
+    - `/api/transactions/{transactionId}`
+    - `/api/budgets/{budgetId}`
+## Admin
+  - **Method**: GET
+    - `/api/users/`
+    - `/api/summary/admin-summary`
+      
+
 ## Postman API Tests
 The following tests can be run using **Postman** to verify the various endpoints of the application:
 
