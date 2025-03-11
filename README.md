@@ -5,7 +5,7 @@
 
 ## Overview
 
-The Finance Tracking Application is designed to help users manage their finances efficiently. It allows users to track their income, expenses, set budgets, and monitor financial goals. The application is built using Express.js, MongoDB, and JWT for secure user authentication. This README provides an overview of the application and the steps required to run it locally.
+The Finance Tracking Application is designed to help users manage their finances efficiently. It allows users to track their income, expenses, set budgets, and monitor financial goals. This application supports real time currency conversion to support users to do transactions in any currency type. The application is built using Express.js, MongoDB, and JWT for secure user authentication. This README provides an overview of the application and the steps required to run it locally.
 
 ## Key Features
 - **User Registration & Login**: Secure user authentication with JWT.
@@ -71,7 +71,7 @@ The Finance Tracking Application is designed to help users manage their finances
   - **Method**: GET
     - `/api/users/`
     - `/api/summary/admin-summary`
-      
+
 
 ## Postman API Tests
 The following tests can be run using **Postman** to verify the various endpoints of the application:
