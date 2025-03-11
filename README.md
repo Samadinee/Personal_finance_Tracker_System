@@ -1,11 +1,11 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/xIbq4TFL)
 
 
-# FINANCE TRACKING APPLICATION
+# PERSONAL FINANCE TRACKER SYSTEM
 
 ## Overview
 
-The Finance Tracking Application is designed to help users manage their finances efficiently. It allows users to track their income, expenses, set budgets, and monitor financial goals. This application supports real time currency conversion to support users to do transactions in any currency type. The application is built using Express.js, MongoDB, and JWT for secure user authentication. This README provides an overview of the application and the steps required to run it locally.
+The Finance Tracking system is designed to help users manage their finances efficiently. It allows users to track their income, expenses, set budgets, and monitor financial goals. This application supports real time currency conversion to support users to do transactions in any currency type. The application is built using Express.js, MongoDB, and JWT for secure user authentication. This README provides an overview of the application and the steps required to run it locally.
 
 ## Key Features
 - **User Registration & Login**: Secure user authentication with JWT.
