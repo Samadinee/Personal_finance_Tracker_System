@@ -56,8 +56,8 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 
-/*
 
+/*
 if (process.env.NODE_ENV !== 'test') { //To ensure this doesn't start the server during testing
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
