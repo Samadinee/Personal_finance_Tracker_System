@@ -1,7 +1,7 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/xIbq4TFL)
 
 
-# FinancE tracking Application
+# FINANCE TRACKING APPLICATION
 
 ## Overview
 
@@ -19,7 +19,7 @@ The Finance Tracking Application is designed to help users manage their finances
 
 ## Technologies Used
 - **Backend Framework**: Express.js
-- **Database**: MongoDB with Mongoose ODM
+- **Database**: MongoDB with Mongoose Object Data Modeling (ODM)
 - **Authentication**: JWT (JSON Web Token)
 - **Testing Framework**: Jest (for unit, integration, and security testing)
 - **API Testing**: Supertest
@@ -29,8 +29,8 @@ The Finance Tracking Application is designed to help users manage their finances
 1. Clone the repository from the desired source.
 2. Install the necessary dependencies by running `npm install`.
 3. Set up the environment variables by creating a `.env` file with the following variables:
-    - `MONGODB_URL`: Your MongoDB connection string.
-    - `JWT_SECRET`: Your secret key for JWT.
+    - `MONGODB_URL`: MongoDB connection string.
+    - `JWT_SECRET`: secret key for JWT.
 
 4. Start the server with `npm start`.
 
@@ -38,14 +38,18 @@ The Finance Tracking Application is designed to help users manage their finances
 
 - **Unit Tests**: The application uses Jest for unit tests. To run the unit tests, use the command:
   - `npm test`
+  - `npm test -- --detectOpenHandles`
   
-- **Integration Tests**: For API testing, **Supertest** and **Mongoose** are used. You can also run integration tests using the following command:
+- **Integration Tests**: For API testing, **Supertest** and **Mongoose** are used. Integration tests can run using the following command:
   - `npm test`
-  
-- **Security Tests**: Security tests are performed using **Supertest**, **dotenv**, and **Jest**. Use the same command `npm test` to run security tests.
+  - `npm test -- --detectOpenHandles`
+
+
+- **Security Tests**: Security tests are performed using **Supertest**, **dotenv**, and **Jest**. Use the same command `npm test` to run security tests. Following command also can use
+  - `npm test test/securityTest/securityTest.test.js`
+
 
 ## Postman API Tests
-
 The following tests can be run using **Postman** to verify the various endpoints of the application:
 
 ### Register User
@@ -118,6 +122,14 @@ The following tests can be run using **Postman** to verify the various endpoints
 - **Response**:
   - Confirmation message indicating successful update of the budget.
 
+### Delete Budget
+- **Method**: DELETE
+- **URL**: `http://localhost:5000/api/budgets/{budgetId}`
+- **Headers**:
+  - `Authorization`: Bearer JWT_TOKEN
+- **Response**:
+  - Message: "Budget deleted successfully"
+
 ### Create Transaction
 - **Method**: POST
 - **URL**: `http://localhost:5000/api/transactions`
@@ -125,7 +137,7 @@ The following tests can be run using **Postman** to verify the various endpoints
   - `type`: Type of transaction (income or expense)
   - `amount`: Amount of the transaction
   - `category`: Category (e.g., Food, Salary)
-  - `tags`: Tags related to the transaction (e.g., lunch, restaurant)
+  - `tags`: Tags related to the transaction (e.g., breakfast, restaurant)
   - `currency`: Currency used for the transaction
 - **Response**:
   - Details of the created transaction.
@@ -138,7 +150,50 @@ The following tests can be run using **Postman** to verify the various endpoints
   - List of transactions filtered by type (income) and category (Food).
   - Each transaction contains details like amount, tags, and date.
 
-## Conclusion
+### Update Transaction
+- **Method**: PUT
+- **URL**: `http://localhost:5000/api/transactions/{transactionId}`
+- **Headers**:
+  - `Authorization`: Bearer JWT_TOKEN
+- **Body**:
+  - `amount`: New transaction amount
+  - `category`: Updated category
+- **Response**:
+  - Message: "Transaction updated successfully"
 
+### Delete Transaction
+- **Method**: DELETE
+- **URL**: `http://localhost:5000/api/transactions/{transactionId}`
+- **Headers**:
+  - `Authorization`: Bearer JWT_TOKEN
+- **Response**:
+  - Message: "Transaction deleted successfully"
+
+### Generate Financial Report
+- **Method**: GET
+- **URL**: `http://localhost:5000/api/reports`
+- **Headers**:
+  - `Authorization`: Bearer JWT_TOKEN
+- **Response**:
+  - Summary of income, expenses, and balance.
+
+### Get User Summary
+- **Method**: GET
+- **URL**: `http://localhost:5000/api/summary/user-summary`
+- **Headers**:
+- `Authorization`: Bearer JWT_TOKEN
+- **Response**:
+  - User’s financial summary including balance and goals.
+
+### Get Admin Summary
+- **Method**: GET
+- **URL**: `http://localhost:5000/api/summary/admin-summary`
+- **Headers**:
+  - `Authorization`: Bearer JWT_TOKEN
+- **Response**:
+  - Financial summary of all users (Admins only).
+
+
+## Conclusion
 This application provides a simple and secure way to manage personal finances. The integration of features like user authentication, transaction management, budgeting, and goal tracking makes it a comprehensive tool for financial management.
 

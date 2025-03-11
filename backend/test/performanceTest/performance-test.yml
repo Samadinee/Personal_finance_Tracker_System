@@ -1,0 +1,38 @@
+config:
+  target: "http://localhost:5000/api"
+  phases:
+    - duration: 60  # Test for 60 seconds
+      arrivalRate: 10  # 10 new users per second
+      rampTo: 50  # Gradually increase to 50 users per second
+      name: "Load Test"
+
+scenarios:
+  - name: "Test User Login"
+    flow:
+      - post:
+          url: "/users/login"
+          json:
+            email: "testuser@example.com"
+            password: "password123"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+
+  - name: "Get User Transactions"
+    flow:
+      - get:
+          url: "/transactions"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+
+  - name: "Create Transaction"
+    flow:
+      - post:
+          url: "/transactions"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          json:
+            type: "expense"
+            amount: 100
+            category: "Food"
+            tags: ["Dinner"]
