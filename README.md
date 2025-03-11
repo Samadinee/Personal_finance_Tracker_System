@@ -50,7 +50,7 @@ The Finance Tracking system is designed to help users manage their finances effi
 
 
 ## API Endpoints
-  ## User
+  ### User
   - **Method**: POST
     - `/api/users/register`
     - `/api/users/login`
@@ -67,7 +67,7 @@ The Finance Tracking system is designed to help users manage their finances effi
   - **Method**: DELETE
     - `/api/transactions/{transactionId}`
     - `/api/budgets/{budgetId}`
-## Admin
+### Admin
   - **Method**: GET
     - `/api/users/`
     - `/api/summary/admin-summary`
